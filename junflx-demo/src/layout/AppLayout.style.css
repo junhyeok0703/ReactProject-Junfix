@@ -1,0 +1,16 @@
+/* 기본 스타일 */
+.circle-to-square {
+  width: 130px;
+  height: 50px;
+  background-color: #3498db; /* 동그라미 색상 */
+  border-radius: 50%; /* 동그라미를 만들기 위해 반지름을 50%로 설정 */
+  transition: width 0.5s, height 0.5s, border-radius 0.5s, background-color 0.5s; /* 전환 효과 설정 */
+}
+
+/* 호버 시 애니메이션 적용 */
+.circle-to-square:hover {
+  width: 130px;
+  height: 50px;
+  background-color: #e74c3c; /* 네모의 색상 */
+  border-radius: 0%; /* 네모로 변환하기 위해 반지름을 0%로 설정 */
+}
