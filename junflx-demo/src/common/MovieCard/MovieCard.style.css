@@ -1,0 +1,35 @@
+.movie-card {
+  width: 220px;
+  height: 330px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  transition: 0.5s;
+}
+.overlayout {
+  width: 100%;
+  height: 100%;
+  background: rgba(43, 41, 41, 0.9);
+  opacity: 0;
+  transition: add 1s;
+  color: white;
+  font-weight: bold;
+  overflow-wrap: break-word;
+}
+.overlayout:hover {
+  opacity: 1;
+}
+.movie-card:hover {
+  transform: scale(1.3) translateZ(20px);
+  z-index: 2;
+}
+@media (max-width: 480px) {
+  .movie-card {
+    width: 180px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: 0.5s;
+  }
+}
