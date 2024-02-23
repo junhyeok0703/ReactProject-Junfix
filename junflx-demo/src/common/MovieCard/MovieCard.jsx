@@ -3,10 +3,25 @@ import Badge from "react-bootstrap/Badge";
 import "./MovieCard.style.css";
 import Over from "./over18.png";
 import { useMovieGenreQuery } from "../../Hooks/useMovieGenre";
+import { useNavigate } from "react-router-dom";
 const MovieCard = ({ movie }) => {
+  const navigate = useNavigate();
+  const gotoDetailMovie = (id) => {
+    navigate(`/movies/${id}`);
+  };
   const { data: genreData } = useMovieGenreQuery();
+  console.log("영화데이터", movie);
+  const showGenre = (genreIdList) => {
+    if (!genreData) return [];
+    const genreNameList = genreIdList.map((id) => {
+      const genreObj = genreData.find((genre) => genre.id === id);
+      return genreObj.name;
+    });
+    return genreNameList;
+  };
   return (
     <div
+      onClick={() => gotoDetailMovie(movie.id)}
       style={{
         backgroundImage:
           "url(" +
@@ -18,8 +33,10 @@ const MovieCard = ({ movie }) => {
       <div className="overlayout">
         <h1>{movie.title}</h1>
         <p>
-          {movie.genre_ids.map((id) => (
-            <Badge bg="danger">Danger</Badge>
+          {showGenre(movie.genre_ids).map((genre, ind) => (
+            <Badge bg="danger" key={ind}>
+              {genre}
+            </Badge>
           ))}
         </p>
         <div>

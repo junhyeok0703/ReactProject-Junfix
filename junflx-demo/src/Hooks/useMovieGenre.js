@@ -8,5 +8,6 @@ export const useMovieGenreQuery = () => {
     queryKey: ["movie-genre"],
     queryFn: fetchMovieGenre,
     select: (result) => result.data.genres,
+    staleTime: 300000, //데이터를 캐싱함
   });
 };
