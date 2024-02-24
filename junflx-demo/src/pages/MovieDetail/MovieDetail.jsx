@@ -12,7 +12,6 @@ const MovieDetail = () => {
   console.log("나여깄어", data);
   return (
     <div>
-      <Banner id={id} />
       <Detail data={data} />
     </div>
   );
