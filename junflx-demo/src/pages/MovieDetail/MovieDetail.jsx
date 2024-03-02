@@ -10,9 +10,10 @@ const MovieDetail = () => {
   const parm = useParams();
   const { id } = parm;
   const { data, isLoading, isError, error } = useMovieDetail({ id });
-  console.log("나여깄어", data);
+  console.log("영화디테일데이터", data);
   const a = useMovieGenreQuery({ id });
-  console.log("hell", a);
+  console.log("장르쿼리데이터", a);
+
   return (
     <div>
       <Detail data={data} />

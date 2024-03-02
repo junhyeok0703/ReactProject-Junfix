@@ -3,6 +3,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import Banner from "../Banner/BannerDetail";
 import Badge from "react-bootstrap/Badge";
 import MovieReviews from "../moviereviews/MovieReviews";
+import Recommendedmovies from "../Recommendedmovies/Recommendedmovies";
 
 const Detail = ({ data }) => {
   console.log("안녕", data);
@@ -92,7 +93,10 @@ const Detail = ({ data }) => {
             </Col>
           </Col>
           <Col>
+            <button>리뷰</button>
+            <button>추천영화</button>
             <MovieReviews id={data.id} />
+            {/* <Recommendedmovies id={data.id} /> */}
           </Col>
         </Row>
       </Container>
