@@ -2,7 +2,7 @@ import React from "react";
 import Badge from "react-bootstrap/Badge";
 import "./MovieCard.style.css";
 import Over from "./over18.png";
-import { useMovieGenreQuery } from "../../Hooks/useMovieGenre";
+import { useMovieGenreQuery } from "../../Hooks/useMovieGenreQuery";
 import { useNavigate } from "react-router-dom";
 const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
