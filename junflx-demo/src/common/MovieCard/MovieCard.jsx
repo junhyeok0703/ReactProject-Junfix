@@ -10,7 +10,7 @@ const MovieCard = ({ movie }) => {
     navigate(`/movies/${id}`);
   };
   const { data: genreData } = useMovieGenreQuery();
-  console.log("영화데이터", movie);
+
   const showGenre = (genreIdList) => {
     if (!genreData) return [];
     const genreNameList = genreIdList.map((id) => {
@@ -25,13 +25,17 @@ const MovieCard = ({ movie }) => {
       style={{
         backgroundImage:
           "url(" +
-          `https://media.themoviedb.org/t/p/w1066_and_h600_bestv2${movie.poster_path}` +
+          `https://media.themoviedb.org/t/p/w1066_and_h600_bestv2${
+            movie.backdrop_path === null
+              ? movie.poster_path
+              : movie.backdrop_path
+          }` +
           ")",
       }}
       className="movie-card"
     >
       <div className="overlayout">
-        <h1>{movie.title}</h1>
+        <h3>{movie.title}</h3>
         <p>
           {showGenre(movie.genre_ids).map((genre, ind) => (
             <Badge bg="danger" key={ind}>

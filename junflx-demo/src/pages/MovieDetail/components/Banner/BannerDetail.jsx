@@ -9,7 +9,7 @@ const Banner = ({ data, id }) => {
 
   useEffect(() => {
     fetchVideo();
-  }, [id]);
+  }, []);
 
   const fetchVideo = async () => {
     try {

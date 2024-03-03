@@ -26,6 +26,7 @@ const AppLayout = () => {
               src="https://yt3.googleusercontent.com/nZ2nJdaag42wq-1RfCuvJgay89LffzLBkLXPVGVP-MRqshVNIyvg5jHWJDlyR0SxSl9peRZ0NA=w1060-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj"
               width={300}
               className="circle-to-square"
+              onClick={() => navigate("/")}
             />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />

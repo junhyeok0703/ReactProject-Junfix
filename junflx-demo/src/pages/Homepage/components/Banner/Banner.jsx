@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { usePopularMoviesQuery } from "../../../../Hooks/usePopularMovies";
 import Alert from "react-bootstrap/Alert";
 import "./Banner.style.css";
+import api from "../../../../utils/api";
+import Modalcompoent from "../../../MovieDetail/components/Model/Modalcompoent";
 const Banner = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const { data, isLoading, isError, error } = usePopularMoviesQuery();
+  useEffect(() => {
+    fetchVideo();
+  }, []);
+  const [videodata, setVideodata] = useState();
   console.log(data);
   if (isLoading) {
     return <h1>Loading...</h1>;
@@ -11,7 +18,17 @@ const Banner = () => {
   if (isError) {
     return <Alert variant="danger">{error.message}</Alert>;
   }
+  const fetchVideo = async () => {
+    try {
+      const response = await api.get(`/movie/${data?.results[0]?.id}/videos`);
+      setVideodata(response.data);
+    } catch (error) {
+      console.error("리뷰를 불러오는 중 오류 발생:", error);
+    }
+  };
 
+  const videoId = videodata?.results[0]?.key;
+  console.log(videodata);
   return (
     <div
       style={{
@@ -25,6 +42,14 @@ const Banner = () => {
       <div className="banner-text-area">
         <h1>{data?.results[0]?.title}</h1>
         <p>{data?.results[0]?.overview}</p>
+        <button onClick={() => setIsOpen(true)}>예고편 보기</button>
+        {isOpen && (
+          <Modalcompoent
+            show={isOpen}
+            onHide={() => setIsOpen(false)}
+            id={videoId}
+          />
+        )}
       </div>
     </div>
   );

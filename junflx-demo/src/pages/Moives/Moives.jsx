@@ -5,7 +5,9 @@ import { Alert } from "bootstrap";
 import { Container, Row, Col } from "react-bootstrap";
 import MovieCard from "../../common/MovieCard/MovieCard";
 import ReactPaginate from "react-paginate";
-
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import { useMovieGenreQuery } from "../../Hooks/useMovieGenreQuery";
 //경로2가지임
 //nav바에서 클릭할때 온경우 => popularMovie
 //keyword를 입력해서 온경우  => keyword와 관련된 영화들을 보여줌
@@ -15,7 +17,7 @@ const Moives = () => {
   const keyword = query.get("q");
   console.log(keyword);
   const { data, isLoading, isError, error } = useSearchMovie({ keyword, page });
-  console.log("hel", data);
+  console.log("검색한 영화데이터", data);
   const handlePageClick = ({ selected }) => {
     setPage(selected + 1);
   };
@@ -29,13 +31,21 @@ const Moives = () => {
   return (
     <Container>
       <Row>
-        <Col lg={4} xs={12}>
-          필터
-        </Col>
-        <Col lg={8} xs={12}>
+        <Col xs={12}>
+          <Col>
+            <DropdownButton id="dropdown-basic-button" title="정렬 기준">
+              <Dropdown.Item>인기많은순</Dropdown.Item>
+              <Dropdown.Item>인기적은순</Dropdown.Item>
+            </DropdownButton>
+
+            <DropdownButton id="dropdown-basic-button" title="장르별 검색">
+              <Dropdown.Item>인기많은순</Dropdown.Item>
+              <Dropdown.Item>인기적은순</Dropdown.Item>
+            </DropdownButton>
+          </Col>
           <Row>
             {data?.results?.map((movie, index) => (
-              <Col key={index} lg={4} xs={12}>
+              <Col key={index} lg={2} md={6} xs={12}>
                 <MovieCard movie={movie} />
               </Col>
             ))}
