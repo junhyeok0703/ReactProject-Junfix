@@ -1,7 +1,6 @@
 import React from "react";
 import Badge from "react-bootstrap/Badge";
 import "./MovieCard.style.css";
-import Over from "./over18.png";
 import { useMovieGenreQuery } from "../../Hooks/useMovieGenreQuery";
 import { useNavigate } from "react-router-dom";
 const MovieCard = ({ movie }) => {
@@ -43,7 +42,15 @@ const MovieCard = ({ movie }) => {
           <div>{movie.vote_average}</div>
           <div>{movie.poputlarity}</div>
           <div>
-            {movie.adult ? "over18" : <img src={Over} width={30} height={30} />}
+            {movie.adult ? (
+              "over18"
+            ) : (
+              <img
+                src={"https://noona-netflix-v2.netlify.app/under18.svg"}
+                width={30}
+                height={30}
+              />
+            )}
           </div>
         </div>
       </div>

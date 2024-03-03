@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import Banner from "../Banner/BannerDetail";
 import Badge from "react-bootstrap/Badge";
@@ -6,11 +6,12 @@ import MovieReviews from "../moviereviews/MovieReviews";
 import Recommendedmovies from "../Recommendedmovies/Recommendedmovies";
 
 const Detail = ({ data }) => {
-  console.log("안녕", data);
+  const [selectData, setSelectData] = useState("reviews");
 
-  // Check if data is defined before accessing properties
+  console.log("디테일페이지의 데이터", data);
+
   if (!data) {
-    return null; // or return a loading indicator or error message
+    return null; //만약 데이터가 리퀘스트가 안되었을때 예외처리
   }
 
   return (
@@ -93,10 +94,14 @@ const Detail = ({ data }) => {
             </Col>
           </Col>
           <Col>
-            <button>리뷰</button>
-            <button>추천영화</button>
-            <MovieReviews id={data.id} />
-            {/* <Recommendedmovies id={data.id} /> */}
+            <button onClick={() => setSelectData("reviews")}>리뷰</button>
+
+            <button onClick={() => setSelectData("Recommend")}>추천영화</button>
+            {selectData === "reviews" ? (
+              <MovieReviews id={data.id} />
+            ) : (
+              <Recommendedmovies id={data.id} />
+            )}
           </Col>
         </Row>
       </Container>
