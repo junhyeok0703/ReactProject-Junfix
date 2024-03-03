@@ -16,7 +16,7 @@ const MovieDetail = () => {
 
   return (
     <div>
-      <Detail data={data} />
+      <Detail data={data} id={id} />
     </div>
   );
 };

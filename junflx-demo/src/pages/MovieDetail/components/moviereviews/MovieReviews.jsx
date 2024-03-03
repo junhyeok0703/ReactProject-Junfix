@@ -26,7 +26,7 @@ const MovieReviews = ({ id }) => {
   console.log("리뷰데이터", data);
 
   return (
-    <div className="BorderC">
+    <div>
       {data?.results?.map((review) => (
         <Review review={review} />
       ))}

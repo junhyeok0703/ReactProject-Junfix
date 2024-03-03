@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MovieCard from "../../../../common/MovieCard/MovieCard";
-import { useRecommendationsMovies } from "../../../../Hooks/useRecommendationsMovies";
+
 import api from "../../../../utils/api";
 import { Col, Container, Row } from "react-bootstrap";
 
