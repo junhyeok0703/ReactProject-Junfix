@@ -1,5 +1,3 @@
-// Review.js
-
 import React, { useState } from "react";
 
 const Review = ({ review }) => {

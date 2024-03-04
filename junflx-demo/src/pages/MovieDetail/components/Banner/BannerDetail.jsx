@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Banner.style.css";
 import Modalcompoent from "../Model/Modalcompoent";
 import api from "../../../../utils/api";
+import { useMovieGenreQuery } from "../../../../Hooks/useMovieGenreQuery";
 
 const Banner = ({ data, id }) => {
   const [isOpen, setIsOpen] = useState(false);

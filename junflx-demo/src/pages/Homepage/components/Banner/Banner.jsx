@@ -4,20 +4,12 @@ import Alert from "react-bootstrap/Alert";
 import "./Banner.style.css";
 import api from "../../../../utils/api";
 import Modalcompoent from "../../../MovieDetail/components/Model/Modalcompoent";
+
 const Banner = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { data, isLoading, isError, error } = usePopularMoviesQuery();
-  useEffect(() => {
-    fetchVideo();
-  }, []);
   const [videodata, setVideodata] = useState();
-  console.log(data);
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-  if (isError) {
-    return <Alert variant="danger">{error.message}</Alert>;
-  }
+
   const fetchVideo = async () => {
     try {
       const response = await api.get(`/movie/${data?.results[0]?.id}/videos`);
@@ -27,8 +19,20 @@ const Banner = () => {
     }
   };
 
+  useEffect(() => {
+    fetchVideo();
+  }, []);
+
   const videoId = videodata?.results[0]?.key;
-  console.log(videodata);
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (isError) {
+    return <Alert variant="danger">{error.message}</Alert>;
+  }
+
   return (
     <div
       style={{

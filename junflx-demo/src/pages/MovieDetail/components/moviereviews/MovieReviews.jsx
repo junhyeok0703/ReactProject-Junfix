@@ -1,8 +1,6 @@
-// MovieReviews.js
-
 import React, { useEffect, useState } from "react";
 import api from "../../../../utils/api";
-import "./MovieReviews.style.css"; // CSS 파일 import
+import "./MovieReviews.style.css";
 import Review from "./Review";
 
 const MovieReviews = ({ id }) => {

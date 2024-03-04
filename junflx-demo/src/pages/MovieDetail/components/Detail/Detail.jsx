@@ -30,7 +30,6 @@ const Detail = ({ data, id }) => {
           </Col>
           <Col lg={6} sm={12}>
             <Col>
-              {/* Check if genres is defined before mapping */}
               {data.genres &&
                 data.genres.map((item) => (
                   <Badge key={item.id} bg="danger">

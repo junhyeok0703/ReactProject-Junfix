@@ -8,26 +8,41 @@ import ReactPaginate from "react-paginate";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { useMovieGenreQuery } from "../../Hooks/useMovieGenreQuery";
-//경로2가지임
-//nav바에서 클릭할때 온경우 => popularMovie
-//keyword를 입력해서 온경우  => keyword와 관련된 영화들을 보여줌
+
 const Moives = () => {
   const [query, setQuery] = useSearchParams();
   const [page, setPage] = useState(1);
   const keyword = query.get("q");
   console.log(keyword);
-  const { data, isLoading, isError, error } = useSearchMovie({ keyword, page });
-  console.log("검색한 영화데이터", data);
+
+  // 검색한 영화 데이터
+  const {
+    data: searchData,
+    isLoading: searchLoading,
+    isError: searchError,
+  } = useSearchMovie({ keyword, page });
+  console.log("검색한 영화데이터", searchData);
+
+  // 장르 영화 데이터
+  const {
+    data: genreData,
+    isLoading: genreLoading,
+    isError: genreError,
+  } = useMovieGenreQuery();
+  console.log("장르 영화데이터", genreData.id);
+
   const handlePageClick = ({ selected }) => {
     setPage(selected + 1);
   };
 
-  if (isLoading) {
-    <div class="lds-dual-ring"></div>;
+  if (searchLoading || genreLoading) {
+    return <div class="lds-dual-ring"></div>;
   }
-  if (isError) {
-    <Alert> {error.message}</Alert>;
+
+  if (searchError || genreError) {
+    return <Alert> {searchError?.message || genreError?.message}</Alert>;
   }
+
   return (
     <Container>
       <Row>
@@ -39,12 +54,21 @@ const Moives = () => {
             </DropdownButton>
 
             <DropdownButton id="dropdown-basic-button" title="장르별 검색">
-              <Dropdown.Item>인기많은순</Dropdown.Item>
-              <Dropdown.Item>인기적은순</Dropdown.Item>
+              {genreData.map((item) => (
+                <Dropdown.Item key={item}>{item.name}</Dropdown.Item>
+              ))}
             </DropdownButton>
           </Col>
           <Row>
-            {data?.results?.map((movie, index) => (
+            {/* 검색한 영화 데이터 매핑 */}
+            {searchData?.results?.map((movie, index) => (
+              <Col key={index} lg={2} md={6} xs={12}>
+                <MovieCard movie={movie} />
+              </Col>
+            ))}
+
+            {/* 장르 영화 데이터 매핑 */}
+            {genreData?.results?.map((movie, index) => (
               <Col key={index} lg={2} md={6} xs={12}>
                 <MovieCard movie={movie} />
               </Col>
@@ -55,7 +79,7 @@ const Moives = () => {
             onPageChange={handlePageClick}
             pageRangeDisplayed={3}
             marginPagesDisplayed={2}
-            pageCount={data?.total_pages}
+            pageCount={searchData?.total_pages || genreData?.total_pages}
             previousLabel="< previous"
             pageClassName="page-item"
             pageLinkClassName="page-link"
