@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchMovie } from "../../Hooks/useSearchMovie";
 import { useSearchParams } from "react-router-dom";
 import { Alert } from "bootstrap";
@@ -12,6 +12,7 @@ import { useMovieGenreQuery } from "../../Hooks/useMovieGenreQuery";
 const Moives = () => {
   const [query, setQuery] = useSearchParams();
   const [page, setPage] = useState(1);
+
   const keyword = query.get("q");
   console.log(keyword);
 
@@ -22,7 +23,10 @@ const Moives = () => {
     isError: searchError,
   } = useSearchMovie({ keyword, page });
   console.log("검색한 영화데이터", searchData);
-
+  const [data, setData] = useState(searchData);
+  useEffect(() => {
+    setData(searchData);
+  }, [searchData]);
   // 장르 영화 데이터
   const {
     data: genreData,
@@ -42,26 +46,56 @@ const Moives = () => {
   if (searchError || genreError) {
     return <Alert> {searchError?.message || genreError?.message}</Alert>;
   }
+  const genreFilter = (itemname) => {
+    console.log("비교", data.results);
+    const newdata = data.results.filter((item) => itemname.name !== item.name);
 
+    setData({ ...data, results: newdata });
+  };
   return (
     <Container>
       <Row>
         <Col xs={12}>
-          <Col>
-            <DropdownButton id="dropdown-basic-button" title="정렬 기준">
-              <Dropdown.Item>인기많은순</Dropdown.Item>
-              <Dropdown.Item>인기적은순</Dropdown.Item>
-            </DropdownButton>
+          <DropdownButton
+            id="dropdown-basic-button"
+            variant="danger"
+            title="정렬 기준"
+          >
+            <Dropdown.Item
+              onClick={() => {
+                const sortedData = [...data.results].sort(
+                  (a, b) => b.vote_average - a.vote_average
+                );
+                setData({ ...data, results: sortedData });
+              }}
+            >
+              인기많은순
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                const sortedData = [...data.results].sort(
+                  (a, b) => a.vote_average - b.vote_average
+                );
+                setData({ ...data, results: sortedData });
+              }}
+            >
+              인기적은순
+            </Dropdown.Item>
+          </DropdownButton>
 
-            <DropdownButton id="dropdown-basic-button" title="장르별 검색">
-              {genreData.map((item) => (
-                <Dropdown.Item key={item}>{item.name}</Dropdown.Item>
-              ))}
-            </DropdownButton>
-          </Col>
+          <h1>장르</h1>
+          {genreData.map((item) => (
+            <button
+              class="custom-btn btn-12"
+              key={item}
+              onClick={() => genreFilter(item)}
+            >
+              <span>{item.name}</span>
+            </button>
+          ))}
           <Row>
             {/* 검색한 영화 데이터 매핑 */}
-            {searchData?.results?.map((movie, index) => (
+            {data?.results?.map((movie, index) => (
               <Col key={index} lg={2} md={6} xs={12}>
                 <MovieCard movie={movie} />
               </Col>
@@ -74,27 +108,32 @@ const Moives = () => {
               </Col>
             ))}
           </Row>
-          <ReactPaginate
-            nextLabel="next >"
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={3}
-            marginPagesDisplayed={2}
-            pageCount={searchData?.total_pages || genreData?.total_pages}
-            previousLabel="< previous"
-            pageClassName="page-item"
-            pageLinkClassName="page-link"
-            previousClassName="page-item"
-            previousLinkClassName="page-link"
-            nextClassName="page-item"
-            nextLinkClassName="page-link"
-            breakLabel="..."
-            breakClassName="page-item"
-            breakLinkClassName="page-link"
-            containerClassName="pagination"
-            activeClassName="active"
-            renderOnZeroPageCount={null}
-            forcePage={page}
-          />
+          <Row>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <ReactPaginate
+                nextLabel="다음 >"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={3}
+                marginPagesDisplayed={2}
+                pageCount={searchData?.total_pages || genreData?.total_pages}
+                previousLabel="< 이전"
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                previousClassName="page-item"
+                previousLinkClassName="page-link"
+                nextClassName="page-item"
+                nextLinkClassName="page-link"
+                breakLabel="..."
+                breakClassName="page-item"
+                breakLinkClassName="page-link"
+                containerClassName="pagination"
+                activeClassName="active"
+                renderOnZeroPageCount={null}
+                forcePage={page}
+                className=""
+              />
+            </div>
+          </Row>
         </Col>
       </Row>
     </Container>
