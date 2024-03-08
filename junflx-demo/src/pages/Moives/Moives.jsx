@@ -48,9 +48,10 @@ const Moives = () => {
   }
   const genreFilter = (itemname) => {
     console.log("비교", data.results);
-    const newdata = data.results.filter((item) => itemname.name !== item.name);
+    const newdata = data.results.filter((item) => itemname.name === item.name);
 
     setData({ ...data, results: newdata });
+    console.log("뉴데이터", data);
   };
   return (
     <Container>
