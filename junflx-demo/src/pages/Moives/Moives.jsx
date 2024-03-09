@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchMovie } from "../../Hooks/useSearchMovie";
 import { useSearchParams } from "react-router-dom";
-import { Alert } from "bootstrap";
+import { Alert } from "react-bootstrap"; // react-bootstrap에서 Alert을 임포트해야 합니다.
 import { Container, Row, Col } from "react-bootstrap";
 import MovieCard from "../../common/MovieCard/MovieCard";
 import ReactPaginate from "react-paginate";
@@ -9,50 +9,55 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { useMovieGenreQuery } from "../../Hooks/useMovieGenreQuery";
 
-const Moives = () => {
+const Movies = () => {
   const [query, setQuery] = useSearchParams();
   const [page, setPage] = useState(1);
+  const [data, setData] = useState({ results: [] }); // 초기 data 상태 설정
+  const [filteredData, setFilteredData] = useState([]);
 
   const keyword = query.get("q");
-  console.log(keyword);
-
-  // 검색한 영화 데이터
   const {
     data: searchData,
     isLoading: searchLoading,
     isError: searchError,
   } = useSearchMovie({ keyword, page });
-  console.log("검색한 영화데이터", searchData);
-  const [data, setData] = useState(searchData);
-  useEffect(() => {
-    setData(searchData);
-  }, [searchData]);
-  // 장르 영화 데이터
   const {
     data: genreData,
     isLoading: genreLoading,
     isError: genreError,
   } = useMovieGenreQuery();
-  console.log("장르 영화데이터", genreData.id);
+
+  useEffect(() => {
+    setData(searchData);
+  }, [searchData]);
+
+  useEffect(() => {
+    setFilteredData(data?.results);
+  }, [data]);
+
+  const genreFilter = (item) => {
+    const filteredMovies = data.results?.filter((movie) =>
+      movie.genre_ids.includes(item.id)
+    );
+    setFilteredData(filteredMovies);
+  };
 
   const handlePageClick = ({ selected }) => {
     setPage(selected + 1);
   };
 
   if (searchLoading || genreLoading) {
-    return <div class="lds-dual-ring"></div>;
+    return <div>Loading...</div>;
   }
 
   if (searchError || genreError) {
-    return <Alert> {searchError?.message || genreError?.message}</Alert>;
+    return (
+      <Alert variant="danger">
+        {searchError?.message || genreError?.message}
+      </Alert>
+    );
   }
-  const genreFilter = (itemname) => {
-    console.log("비교", data.results);
-    const newdata = data.results.filter((item) => itemname.name === item.name);
 
-    setData({ ...data, results: newdata });
-    console.log("뉴데이터", data);
-  };
   return (
     <Container>
       <Row>
@@ -64,7 +69,7 @@ const Moives = () => {
           >
             <Dropdown.Item
               onClick={() => {
-                const sortedData = [...data.results].sort(
+                const sortedData = [...data.results]?.sort(
                   (a, b) => b.vote_average - a.vote_average
                 );
                 setData({ ...data, results: sortedData });
@@ -74,7 +79,7 @@ const Moives = () => {
             </Dropdown.Item>
             <Dropdown.Item
               onClick={() => {
-                const sortedData = [...data.results].sort(
+                const sortedData = [...data.results]?.sort(
                   (a, b) => a.vote_average - b.vote_average
                 );
                 setData({ ...data, results: sortedData });
@@ -85,30 +90,29 @@ const Moives = () => {
           </DropdownButton>
 
           <h1>장르</h1>
-          {genreData.map((item) => (
-            <button
-              class="custom-btn btn-12"
-              key={item}
-              onClick={() => genreFilter(item)}
-            >
-              <span>{item.name}</span>
-            </button>
-          ))}
-          <Row>
-            {/* 검색한 영화 데이터 매핑 */}
-            {data?.results?.map((movie, index) => (
-              <Col key={index} lg={2} md={6} xs={12}>
-                <MovieCard movie={movie} />
-              </Col>
-            ))}
+          {genreData?.map(
+            (
+              item // genreData가 장르 목록을 'genres' 프로퍼티에 포함하고 있다고 가정합니다.
+            ) => (
+              <button
+                className="custom-btn btn-12"
+                key={item.id}
+                onClick={() => genreFilter(item)}
+              >
+                <span>{item.name}</span>
+              </button>
+            )
+          )}
 
-            {/* 장르 영화 데이터 매핑 */}
-            {genreData?.results?.map((movie, index) => (
-              <Col key={index} lg={2} md={6} xs={12}>
+          <Row>
+            {/* 필터링된 영화 데이터 매핑 */}
+            {filteredData.map((movie, index) => (
+              <Col key={index} lg={3} md={4} sm={6} xs={12}>
                 <MovieCard movie={movie} />
               </Col>
             ))}
           </Row>
+
           <Row>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <ReactPaginate
@@ -116,22 +120,12 @@ const Moives = () => {
                 onPageChange={handlePageClick}
                 pageRangeDisplayed={3}
                 marginPagesDisplayed={2}
-                pageCount={searchData?.total_pages || genreData?.total_pages}
+                pageCount={searchData?.total_pages}
                 previousLabel="< 이전"
-                pageClassName="page-item"
-                pageLinkClassName="page-link"
-                previousClassName="page-item"
-                previousLinkClassName="page-link"
-                nextClassName="page-item"
-                nextLinkClassName="page-link"
                 breakLabel="..."
-                breakClassName="page-item"
-                breakLinkClassName="page-link"
                 containerClassName="pagination"
                 activeClassName="active"
-                renderOnZeroPageCount={null}
-                forcePage={page}
-                className=""
+                forcePage={page - 1}
               />
             </div>
           </Row>
@@ -141,4 +135,4 @@ const Moives = () => {
   );
 };
 
-export default Moives;
+export default Movies;
